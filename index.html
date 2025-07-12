@@ -45,13 +45,8 @@
     <!-- PANTALLA 2: JUEGO (reestructurada para responsividad) -->
     <div id="pantalla-juego" class="oculto">
 
-        <!-- Este es el nuevo contenedor para el layout de escritorio -->
-        <header class="header-juego">
-            <button id="btn-home" class="btn-header">‹ Menú</button>
-            <h1 class="titulo-juego">Ta-Te-Ti</h1>
-        </header>
-
-        <div class="layout-escritorio">
+        <!-- Este contenedor principal nos permitirá cambiar el layout con una sola regla -->
+        <div class="layout-juego">
 
             <!-- Marcador Izquierdo -->
             <div id="marcador-x" class="marcador-lateral">
@@ -59,9 +54,12 @@
                 <span id="puntajeX" class="puntaje-numero">0</span>
             </div>
 
-            <!-- Nueva Zona Central que agrupa el juego en sí -->
+            <!-- Zona Central que agrupa el tablero y sus controles -->
             <div class="zona-central-juego">
-
+                <header class="header-juego">
+                    <button id="btn-home" class="btn-header">‹ Menú</button>
+                    <h1 class="titulo-juego">Ta-Te-Ti</h1>
+                </header>
 
                 <div id="tablero">
                     <div class="cuadro" id="1"></div>

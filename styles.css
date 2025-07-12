@@ -13,9 +13,9 @@
     --color-texto-principal: #ffffff;
     --color-texto-secundario: #bdc3c7;
     
-    --fondo-glass: rgba(255, 255, 255, 0.1);
-    --borde-glass: 1px solid rgba(255, 255, 255, 0.18);
-    --filtro-blur: blur(10px);
+    --fondo-glass: rgba(255, 255, 255, 0.08);
+    --borde-glass: 1px solid rgba(255, 255, 255, 0.15);
+    --filtro-blur: blur(8px);
     --sombra-profunda: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 
     --radio-borde: 15px;
@@ -39,7 +39,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: 15px;
     overflow: hidden;
 }
 
@@ -51,26 +51,25 @@ body {
 
 #pantalla-setup, #pantalla-juego {
     width: 100%;
+    height: 100%;
     position: absolute;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 25px;
 }
-#pantalla-juego {
-    gap: 25px;
-}
+
 .activo { animation: fadeIn 0.5s ease-out forwards; }
 .oculto { display: none !important; }
 .desvaneciendo { animation: fadeOut 0.5s ease-in forwards; pointer-events: none; }
 
 /* ==========================================================================
-   4. PANTALLA DE CONFIGURACIÓN (Estilo "Glassmorphism")
+   4. PANTALLA DE CONFIGURACIÓN
    ========================================================================== */
 .setup-contenedor {
     background: var(--fondo-glass);
     backdrop-filter: var(--filtro-blur);
-    -webkit-backdrop-filter: var(--filtro-blur); /* Soporte para Safari */
+    -webkit-backdrop-filter: var(--filtro-blur);
     border-radius: var(--radio-borde);
     border: var(--borde-glass);
     box-shadow: var(--sombra-profunda);
@@ -86,10 +85,17 @@ body {
 
 .selector-modo { display: flex; gap: 15px; margin-bottom: 25px; }
 .btn-modo, .btn-accion, .btn-header {
-    flex: 1; padding: 15px; font-family: 'Poppins', sans-serif;
-    font-size: 1rem; font-weight: 600; border-radius: 10px;
-    border: none; cursor: pointer; transition: var(--transicion-rapida);
-    background: var(--fondo-glass); color: var(--color-texto-principal);
+    flex-grow: 1;
+    padding: 15px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: var(--transicion-rapida);
+    background: var(--fondo-glass);
+    color: var(--color-texto-principal);
     border: var(--borde-glass);
 }
 .btn-modo:hover, .btn-accion:hover, .btn-header:hover { transform: scale(1.05); filter: brightness(1.2); }
@@ -98,155 +104,140 @@ body {
 .opciones-dificultad { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
 .opcion-radio input[type="radio"] { opacity: 0; position: fixed; width: 0; }
 .opcion-radio label {
-    padding: 10px 20px; border-radius: 8px; cursor: pointer;
-    transition: var(--transicion-rapida); background: var(--fondo-glass);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transicion-rapida);
+    background: var(--fondo-glass);
     border: var(--borde-glass);
 }
 .opcion-radio label:hover { filter: brightness(1.2); }
 .opcion-radio input[type="radio"]:checked + label {
-    background-image: var(--gradiente-o); color: #000; font-weight: 700;
+    background-image: var(--gradiente-o);
+    color: #000;
+    font-weight: 700;
 }
 
 .btn-accion { width: 100%; background-image: var(--gradiente-accion); color: #fff; font-weight: 700; }
 
 /* ==========================================================================
-   5. PANTALLA DE JUEGO
+   5. PANTALLA DE JUEGO (Mobile-First Layout)
    ========================================================================== */
-.header-juego {
-    display: flex;
-    justify-content: center; /* Centra el título por defecto */
-    align-items: center;
+.layout-juego {
+    display: grid;
     width: 100%;
-    max-width: 500px; /* Ancho máximo para el título */
-    position: relative;
+    max-width: 400px;
+    justify-items: center;
+    align-items: center;
+    gap: 20px;
+    grid-template-areas:
+        "header"
+        "marcadores"
+        "tablero"
+        "mensajes"
+        "reiniciar";
 }
 
+.header-juego { grid-area: header; display: flex; justify-content: center; align-items: center; width: 100%; position: relative; }
 .titulo-juego { font-size: 2rem; }
+.btn-header { position: absolute; left: 0; top: 50%; transform: translateY(-50%); flex-grow: 0; padding: 8px 15px; }
 
-.btn-header {
-    position: absolute;
-    left: 0; /* Lo posiciona a la izquierda del header */
-    top: 50%;
-    transform: translateY(-50%);
-    flex: 0 1 auto;
-    padding: 8px 15px;
-}
-.marcador-contenedor { display: flex; gap: 20px; }
+.marcador-contenedor { grid-area: marcadores; display: flex; gap: 15px; width: 100%; }
 
 .marcador-lateral {
-    width: 160px; height: 100px; padding: 10px; text-align: center;
-    display: flex; flex-direction: column; justify-content: center;
-    background: var(--fondo-glass); border-radius: var(--radio-borde);
-    border: var(--borde-glass); transition: var(--transicion-rapida);
+    flex: 1;
+    height: 90px;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--fondo-glass);
+    border-radius: var(--radio-borde);
+    border: var(--borde-glass);
+    transition: var(--transicion-rapida);
 }
-.marcador-activo { transform: scale(1.08); box-shadow: 0 0 25px var(--color-texto-secundario); }
-.etiqueta-jugador { font-weight: 400; color: var(--color-texto-secundario); }
-.puntaje-numero { font-size: 3rem; font-weight: 700; line-height: 1.1; }
+.marcador-activo { transform: scale(1.08); box-shadow: 0 0 20px var(--color-texto-secundario); }
+.etiqueta-jugador { font-weight: 400; font-size: 0.9rem; color: var(--color-texto-secundario); }
+.puntaje-numero { font-size: 2.5rem; font-weight: 700; line-height: 1.1; }
 
-#tablero { display: grid; grid-template-columns: repeat(3, 100px); grid-template-rows: repeat(3, 100px); gap: 12px; }
+#tablero { grid-area: tablero; display: grid; grid-template-columns: repeat(3, 80px); grid-template-rows: repeat(3, 80px); gap: 10px; }
 #tablero.esperando-ia { cursor: wait; pointer-events: none; }
 .cuadro {
-    width: 100px; height: 100px; background: var(--fondo-glass);
-    border-radius: var(--radio-borde); display: flex; justify-content: center;
-    align-items: center; font-size: 5rem; font-weight: 700;
-    cursor: pointer; transition: var(--transicion-rapida);
+    width: 80px;
+    height: 80px;
+    background: var(--fondo-glass);
+    border-radius: var(--radio-borde);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transicion-rapida);
     position: relative;
 }
 .cuadro:hover { transform: scale(1.05); filter: brightness(1.2); }
 
 .cuadro.X, .cuadro.O {
-    color: transparent; /* Oculta el color de fuente plano */
-    -webkit-background-clip: text; /* Para Safari y Chrome */
+    color: transparent;
+    -webkit-background-clip: text;
     background-clip: text;
     animation: aparecer 0.4s ease-out;
 }
 .cuadro.X { background-image: var(--gradiente-x); }
 .cuadro.O { background-image: var(--gradiente-o); }
 
-#mensajes { font-size: 1.3rem; font-weight: 600; min-height: 25px; text-align: center; }
+#mensajes { grid-area: mensajes; font-size: 1.3rem; font-weight: 600; min-height: 25px; text-align: center; }
+#reiniciar { grid-area: reiniciar; width: 100%; }
 
+/* --- Animaciones de Victoria y Hover --- */
 @keyframes aparecer { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
 @keyframes celebrar { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 .celda-ganadora { color: #fff !important; animation: celebrar 0.8s ease-in-out forwards; }
 .celda-ganadora.X { background-image: var(--gradiente-x); }
 .celda-ganadora.O { background-image: var(--gradiente-o); }
 
 /* ==========================================================================
-   6. RESPONSIVIDAD (MOBILE-FIRST APPROACH)
-   ========================================================================== */
-
-@media (max-width: 480px) {
-    body { padding: 10px; }
-    .setup-contenedor { padding: 20px 15px; }
-    .selector-modo, .opciones-dificultad { flex-direction: column; }
-    .marcador-contenedor { gap: 10px; }
-    .marcador-lateral { width: 110px; height: 75px; }
-}
-
-/* ==========================================================================
-   7. LAYOUT DE ESCRITORIO (MEDIA QUERY)
+   6. LAYOUT DE ESCRITORIO (Media Query)
    ========================================================================== */
 @media (min-width: 1024px) {
-  
-  /* Hacemos que la pantalla del juego use todo el espacio disponible */
-  #pantalla-juego {
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Ocupa toda la altura de la ventana */
-  }
-
-  /* El nuevo contenedor usará Flexbox para el layout horizontal */
-  .layout-escritorio {
-    display: flex;
-    flex-direction: row; /* La clave: alinear en fila */
-    align-items: center;  /* Centrar verticalmente los marcadores con el tablero */
-    justify-content: center;
-    gap: 60px; /* Espacio generoso entre elementos */
-    width: 100%;
-    max-width: 1200px;
-  }
-  
-  /* La zona central apilará su propio contenido verticalmente */
-  .zona-central-juego {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 25px; /* Espacio entre el header, tablero, mensajes, etc. */
-  }
-  
-  /* --- Ajustes menores para la vista de escritorio --- */
-
-  /* El header ya no necesita controlar todo el ancho */
-  .header-juego {
-        position: static; /* Vuelve al flujo normal */
-        grid-column: 1 / -1; /* Ocupa toda la fila si usas grid */
-        text-align: center;
-        margin-bottom: 20px; /* Añade espacio debajo */
+    .layout-juego {
+        max-width: 1200px;
+        gap: 25px 60px;
+        grid-template-areas:
+            "marcador-x header     marcador-o"
+            "marcador-x tablero    marcador-o"
+            "marcador-x mensajes   marcador-o"
+            "marcador-x reiniciar  marcador-o";
+        grid-template-columns: 1fr auto 1fr;
     }
-  
-  /* Movemos el botón del menú para que no estorbe */
-  .btn-header {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  /* Hacemos los marcadores un poco más grandes y pronunciados */
-  .marcador-lateral {
-    width: 200px;
-    height: 180px;
-  }
-  .puntaje-numero {
-    font-size: 4rem;
-  }
-  
-  /* Ocultamos el contenedor de marcadores que solo usábamos en móvil */
-  .marcador-contenedor {
-    display: none;
-  }
-   .layout-escritorio {
-        gap: 60px;
+    
+    .header-juego { width: auto; }
+    .btn-header { position: static; transform: none; } /* Resetea la posición del botón */
+
+    /* Ocultamos el contenedor de marcadores móvil y mostramos los individuales */
+    .marcador-contenedor { display: none; }
+    #marcador-x, #marcador-o { display: flex; }
+    #marcador-x { grid-area: marcador-x; justify-self: end; }
+    #marcador-o { grid-area: marcador-o; justify-self: start; }
+    
+    .zona-central-juego {
+        grid-area: tablero; /* La zona central ahora es el tablero */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
     }
+
+    /* Reseteamos el área de los elementos centrales ya que están dentro de .zona-central-juego */
+    #tablero { grid-area: unset; grid-template-columns: repeat(3, 110px); grid-template-rows: repeat(3, 110px); gap: 15px; }
+    .cuadro { width: 110px; height: 110px; font-size: 5.5rem; }
+    #mensajes { grid-area: unset; }
+    #reiniciar { grid-area: unset; width: 100%; }
+
+    /* Ajustes de tamaño para escritorio */
+    .marcador-lateral { width: 220px; height: 180px; }
+    .puntaje-numero { font-size: 4.5rem; }
+    .etiqueta-jugador { font-size: 1.2rem; }
 }
