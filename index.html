@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ta Te Ti</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- PANTALLA 1: CONFIGURACIÓN INICIAL -->
+    <div id="pantalla-setup">
+        <div class="setup-contenedor">
+            <h1>Ta-Te-Ti</h1>
+            <h2>Elige tu modo de juego</h2>
+
+            <div class="selector-modo">
+                <button id="btn-pvp" class="btn-modo">Jugador vs Jugador</button>
+                <button id="btn-pvc" class="btn-modo">Jugador vs Máquina</button>
+            </div>
+
+            <div id="selector-dificultad" class="oculto">
+                <h3>Selecciona la dificultad</h3>
+                <div class="opciones-dificultad">
+                    <div class="opcion-radio">
+                        <input type="radio" id="dificultad-facil" name="dificultad" value="facil" checked>
+                        <label for="dificultad-facil">Fácil</label>
+                    </div>
+                    <div class="opcion-radio">
+                        <input type="radio" id="dificultad-normal" name="dificultad" value="normal">
+                        <label for="dificultad-normal">Normal</label>
+                    </div>
+                    <div class="opcion-radio">
+                        <input type="radio" id="dificultad-dificil" name="dificultad" value="dificil">
+                        <label for="dificultad-dificil">Difícil</label>
+                    </div>
+                </div>
+                <button id="btn-iniciar-juego" class="btn-accion">Iniciar Juego</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA 2: JUEGO PRINCIPAL (Oculta por defecto) -->
+    <div id="pantalla-juego" class="oculto">
+        <div class="contenedor-principal">
+            <div class="marcador-lateral">
+                <span id="etiqueta-jugador-x" class="etiqueta-jugador">Jugador X</span>
+                <span id="puntajeX" class="puntaje-numero">0</span>
+            </div>
+
+            <div class="contenedor-juego">
+                <h1 class="titulo-juego">Ta-Te-Ti</h1>
+
+                <!-- *** CELDAS RESTAURADAS AQUÍ *** -->
+                <div id="tablero">
+                    <div class="cuadro" id="1"></div>
+                    <div class="cuadro" id="2"></div>
+                    <div class="cuadro" id="3"></div>
+                    <div class="cuadro" id="4"></div>
+                    <div class="cuadro" id="5"></div>
+                    <div class="cuadro" id="6"></div>
+                    <div class="cuadro" id="7"></div>
+                    <div class="cuadro" id="8"></div>
+                    <div class="cuadro" id="9"></div>
+                </div>
+
+                <div id="mensajes">
+                    <p id="turno">Turno de X</p>
+                </div>
+                <button id="reiniciar">Reiniciar Ronda</button>
+            </div>
+
+            <div class="marcador-lateral">
+                <span id="etiqueta-jugador-o" class="etiqueta-jugador">Jugador O</span>
+                <span id="puntajeO" class="puntaje-numero">0</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+
+</body>
+
+</html>
