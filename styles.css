@@ -1,21 +1,25 @@
-
+/* --- Importar Fuente Profesional --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 /* ==========================================================================
-   1. RAÍZ Y VARIABLES GLOBALES (CUSTOM PROPERTIES)
+   1. RAÍZ Y VARIABLES DE DISEÑO ("Design Tokens")
    ========================================================================== */
 :root {
-    --color-fondo: #2C3E50;
-    --color-superficie: #34495E;
-    --color-borde: #4A6572;
-    --color-texto: #ECF0F1;
-    --color-jugador-x: #1ABC9C;
-    --color-jugador-o: #F1C40F;
-    --color-accion: #E74C3C;
-    --color-accion-hover: #C0392B;
-    --sombra: 0 4px 10px rgba(0, 0, 0, 0.3);
-    --sombra-activa: 0 8px 25px rgba(0,0,0,0.5);
-    --transicion-suave: all 0.3s ease;
+    --gradiente-fondo: linear-gradient(135deg, #1d2b3c, #2c3e50, #1d2b3c);
+    --gradiente-x: linear-gradient(45deg, #00f2fe, #4facfe);
+    --gradiente-o: linear-gradient(45deg, #f8ff33, #ff8c00);
+    --gradiente-accion: linear-gradient(45deg, #e74c3c, #c0392b);
+    
+    --color-texto-principal: #ffffff;
+    --color-texto-secundario: #bdc3c7;
+    
+    --fondo-glass: rgba(255, 255, 255, 0.1);
+    --borde-glass: 1px solid rgba(255, 255, 255, 0.18);
+    --filtro-blur: blur(10px);
+    --sombra-profunda: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+    --radio-borde: 15px;
+    --transicion-rapida: all 0.25s ease-out;
 }
 
 /* ==========================================================================
@@ -29,206 +33,220 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: var(--color-fondo);
-    color: var(--color-texto);
+    background: var(--gradiente-fondo);
+    color: var(--color-texto-principal);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     padding: 20px;
-    overflow: hidden; /* Evita barras de scroll durante animaciones */
+    overflow: hidden;
 }
 
 /* ==========================================================================
    3. PANTALLAS Y TRANSICIONES
    ========================================================================== */
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
-@keyframes fadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.98); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-20px); } }
 
 #pantalla-setup, #pantalla-juego {
     width: 100%;
     position: absolute;
-
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    gap: 25px;
 }
-
-.activo {
-    animation: fadeIn 0.4s ease-out forwards;
+#pantalla-juego {
+    gap: 25px;
 }
-
-.oculto {
-    display: none !important;
-}
-
-.desvaneciendo {
-    animation: fadeOut 0.4s ease-in forwards;
-}
+.activo { animation: fadeIn 0.5s ease-out forwards; }
+.oculto { display: none !important; }
+.desvaneciendo { animation: fadeOut 0.5s ease-in forwards; pointer-events: none; }
 
 /* ==========================================================================
-   4. PANTALLA DE CONFIGURACIÓN
+   4. PANTALLA DE CONFIGURACIÓN (Estilo "Glassmorphism")
    ========================================================================== */
 .setup-contenedor {
-    background-color: var(--color-superficie);
-    padding: 40px 50px;
-    border-radius: 20px;
-    box-shadow: var(--sombra);
+    background: var(--fondo-glass);
+    backdrop-filter: var(--filtro-blur);
+    -webkit-backdrop-filter: var(--filtro-blur); /* Soporte para Safari */
+    border-radius: var(--radio-borde);
+    border: var(--borde-glass);
+    box-shadow: var(--sombra-profunda);
+    padding: 30px 40px;
     width: 100%;
     max-width: 500px;
-    margin: 0 auto;
     text-align: center;
 }
 
-.setup-contenedor h1 { font-size: 3rem; font-weight: 700; }
-.setup-contenedor h2 { margin: 10px 0 30px; font-weight: 600; }
+.setup-contenedor h1 { font-size: 2.8rem; letter-spacing: 2px; }
+.setup-contenedor h2 { color: var(--color-texto-secundario); margin: 5px 0 25px; font-weight: 400; }
 .setup-contenedor h3 { margin-bottom: 20px; font-weight: 600; }
 
-.selector-modo { display: flex; gap: 20px; margin-bottom: 30px; }
-
-.btn-modo, .btn-accion {
-    flex: 1;
-    padding: 15px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border: 2px solid var(--color-borde);
-    border-radius: 10px;
-    background-color: transparent;
-    color: var(--color-texto);
-    cursor: pointer;
-    transition: var(--transicion-suave);
+.selector-modo { display: flex; gap: 15px; margin-bottom: 25px; }
+.btn-modo, .btn-accion, .btn-header {
+    flex: 1; padding: 15px; font-family: 'Poppins', sans-serif;
+    font-size: 1rem; font-weight: 600; border-radius: 10px;
+    border: none; cursor: pointer; transition: var(--transicion-rapida);
+    background: var(--fondo-glass); color: var(--color-texto-principal);
+    border: var(--borde-glass);
 }
+.btn-modo:hover, .btn-accion:hover, .btn-header:hover { transform: scale(1.05); filter: brightness(1.2); }
+.btn-modo.seleccionado { background-image: var(--gradiente-x); color: #fff; font-weight: 700; }
 
-.btn-modo:hover, .btn-accion:hover {
-    background-color: var(--color-borde);
-    border-color: var(--color-borde);
-    transform: translateY(-2px);
-}
-
-.btn-modo.seleccionado {
-    background-color: var(--color-jugador-x);
-    border-color: var(--color-jugador-x);
-    color: var(--color-fondo);
-}
-
-#selector-dificultad { border-top: 1px solid var(--color-borde); padding-top: 30px; }
-.opciones-dificultad { display: flex; justify-content: center; gap: 25px; margin-bottom: 30px; }
+.opciones-dificultad { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
 .opcion-radio input[type="radio"] { opacity: 0; position: fixed; width: 0; }
 .opcion-radio label {
-    display: inline-block;
-    padding: 10px 20px;
-    border: 2px solid var(--color-borde);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: var(--transicion-suave);
+    padding: 10px 20px; border-radius: 8px; cursor: pointer;
+    transition: var(--transicion-rapida); background: var(--fondo-glass);
+    border: var(--borde-glass);
 }
-.opcion-radio label:hover { background-color: var(--color-borde); }
+.opcion-radio label:hover { filter: brightness(1.2); }
 .opcion-radio input[type="radio"]:checked + label {
-    background-color: var(--color-jugador-o);
-    border-color: var(--color-jugador-o);
-    color: var(--color-superficie);
-    font-weight: 700;
+    background-image: var(--gradiente-o); color: #000; font-weight: 700;
 }
 
-.btn-accion { width: 100%; background-color: var(--color-accion); border-color: var(--color-accion); }
-.btn-accion:hover { background-color: var(--color-accion-hover); border-color: var(--color-accion-hover); }
+.btn-accion { width: 100%; background-image: var(--gradiente-accion); color: #fff; font-weight: 700; }
 
 /* ==========================================================================
    5. PANTALLA DE JUEGO
    ========================================================================== */
-.btn-menu { position: absolute; top: 0; left: 20px; width: auto; z-index: 10; padding: 8px 15px; font-size: 0.9rem; }
-.contenedor-principal { display: flex; align-items: center; justify-content: center; gap: 60px; width: 100%; max-width: 900px; }
-.contenedor-juego { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-.titulo-juego { font-size: 3rem; font-weight: 700; }
+.header-juego {
+    display: flex;
+    justify-content: center; /* Centra el título por defecto */
+    align-items: center;
+    width: 100%;
+    max-width: 500px; /* Ancho máximo para el título */
+    position: relative;
+}
+
+.titulo-juego { font-size: 2rem; }
+
+.btn-header {
+    position: absolute;
+    left: 0; /* Lo posiciona a la izquierda del header */
+    top: 50%;
+    transform: translateY(-50%);
+    flex: 0 1 auto;
+    padding: 8px 15px;
+}
+.marcador-contenedor { display: flex; gap: 20px; }
 
 .marcador-lateral {
+    width: 160px; height: 100px; padding: 10px; text-align: center;
+    display: flex; flex-direction: column; justify-content: center;
+    background: var(--fondo-glass); border-radius: var(--radio-borde);
+    border: var(--borde-glass); transition: var(--transicion-rapida);
+}
+.marcador-activo { transform: scale(1.08); box-shadow: 0 0 25px var(--color-texto-secundario); }
+.etiqueta-jugador { font-weight: 400; color: var(--color-texto-secundario); }
+.puntaje-numero { font-size: 3rem; font-weight: 700; line-height: 1.1; }
+
+#tablero { display: grid; grid-template-columns: repeat(3, 100px); grid-template-rows: repeat(3, 100px); gap: 12px; }
+#tablero.esperando-ia { cursor: wait; pointer-events: none; }
+.cuadro {
+    width: 100px; height: 100px; background: var(--fondo-glass);
+    border-radius: var(--radio-borde); display: flex; justify-content: center;
+    align-items: center; font-size: 5rem; font-weight: 700;
+    cursor: pointer; transition: var(--transicion-rapida);
+    position: relative;
+}
+.cuadro:hover { transform: scale(1.05); filter: brightness(1.2); }
+
+.cuadro.X, .cuadro.O {
+    color: transparent; /* Oculta el color de fuente plano */
+    -webkit-background-clip: text; /* Para Safari y Chrome */
+    background-clip: text;
+    animation: aparecer 0.4s ease-out;
+}
+.cuadro.X { background-image: var(--gradiente-x); }
+.cuadro.O { background-image: var(--gradiente-o); }
+
+#mensajes { font-size: 1.3rem; font-weight: 600; min-height: 25px; text-align: center; }
+
+@keyframes aparecer { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+@keyframes celebrar { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+.celda-ganadora { color: #fff !important; animation: celebrar 0.8s ease-in-out forwards; }
+.celda-ganadora.X { background-image: var(--gradiente-x); }
+.celda-ganadora.O { background-image: var(--gradiente-o); }
+
+/* ==========================================================================
+   6. RESPONSIVIDAD (MOBILE-FIRST APPROACH)
+   ========================================================================== */
+
+@media (max-width: 480px) {
+    body { padding: 10px; }
+    .setup-contenedor { padding: 20px 15px; }
+    .selector-modo, .opciones-dificultad { flex-direction: column; }
+    .marcador-contenedor { gap: 10px; }
+    .marcador-lateral { width: 110px; height: 75px; }
+}
+
+/* ==========================================================================
+   7. LAYOUT DE ESCRITORIO (MEDIA QUERY)
+   ========================================================================== */
+@media (min-width: 1024px) {
+  
+  /* Hacemos que la pantalla del juego use todo el espacio disponible */
+  #pantalla-juego {
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+  }
+
+  /* El nuevo contenedor usará Flexbox para el layout horizontal */
+  .layout-escritorio {
+    display: flex;
+    flex-direction: row; /* La clave: alinear en fila */
+    align-items: center;  /* Centrar verticalmente los marcadores con el tablero */
+    justify-content: center;
+    gap: 60px; /* Espacio generoso entre elementos */
+    width: 100%;
+    max-width: 1200px;
+  }
+  
+  /* La zona central apilará su propio contenido verticalmente */
+  .zona-central-juego {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    background-color: var(--color-superficie);
-    width: 180px;
-    height: 180px;
-    border-radius: 20px;
-    box-shadow: var(--sombra);
-    transition: var(--transicion-suave);
-}
+    gap: 25px; /* Espacio entre el header, tablero, mensajes, etc. */
+  }
+  
+  /* --- Ajustes menores para la vista de escritorio --- */
 
-.marcador-activo {
-    transform: scale(1.05);
-    box-shadow: var(--sombra-activa), 0 0 15px var(--color-borde);
-}
-
-.etiqueta-jugador { font-size: 1.2rem; font-weight: 600; }
-.puntaje-numero { font-size: 4rem; font-weight: 700; line-height: 1.1; }
-
-#tablero { display: grid; grid-template-columns: repeat(3, 100px); grid-template-rows: repeat(3, 100px); gap: 15px; }
-#tablero.esperando-ia { cursor: wait; pointer-events: none; }
-.cuadro {
-    width: 100px;
-    height: 100px;
-    background-color: var(--color-superficie);
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 5rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    position: relative;
-}
-.cuadro:hover { background-color: var(--color-borde); }
-
-.cuadro:not(.X):not(.O)::before {
+  /* El header ya no necesita controlar todo el ancho */
+  .header-juego {
+        position: static; /* Vuelve al flujo normal */
+        grid-column: 1 / -1; /* Ocupa toda la fila si usas grid */
+        text-align: center;
+        margin-bottom: 20px; /* Añade espacio debajo */
+    }
+  
+  /* Movemos el botón del menú para que no estorbe */
+  .btn-header {
     position: absolute;
-    opacity: 0;
-    font-size: 5rem;
-    font-weight: 700;
-    transition: opacity 0.2s ease;
-}
-#tablero.turno-x .cuadro:not(.X):not(.O):hover::before { content: 'X'; color: var(--color-jugador-x); opacity: 0.25; }
-#tablero.turno-o .cuadro:not(.X):not(.O):hover::before { content: 'O'; color: var(--color-jugador-o); opacity: 0.25; }
-
-@keyframes aparecer { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-.cuadro.X { color: var(--color-jugador-x); animation: aparecer 0.3s ease forwards; }
-.cuadro.O { color: var(--color-jugador-o); animation: aparecer 0.3s ease forwards; }
-
-#mensajes { font-size: 1.5rem; font-weight: 600; min-height: 30px; }
-#reiniciar {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 10px;
-    background-color: var(--color-accion);
-    color: var(--color-texto);
-    cursor: pointer;
-    transition: var(--transicion-suave);
-}
-#reiniciar:hover { transform: scale(1.05); background-color: var(--color-accion-hover); }
-
-/* --- Animación de Victoria Mejorada --- */
-@keyframes pulso {
-  0%, 100% { transform: scale(1); box-shadow: 0 0 5px transparent; }
-  50% { transform: scale(1.05); box-shadow: 0 0 20px currentColor; }
-}
-.celda-ganadora { animation: pulso 1.2s infinite ease-in-out; }
-.celda-ganadora.X { background-color: var(--color-jugador-x) !important; color: var(--color-fondo); }
-.celda-ganadora.O { background-color: var(--color-jugador-o) !important; color: var(--color-fondo); }
-
-/* ==========================================================================
-   6. RESPONSIVIDAD
-   ========================================================================== */
-@media (max-width: 768px) {
-    .contenedor-principal { flex-direction: column; gap: 20px; }
-    .marcador-lateral { width: 150px; height: 120px; }
-    .puntaje-numero { font-size: 3rem; }
-}
-
-@media (max-width: 600px) {
-    .setup-contenedor { padding: 30px 20px; }
-    .selector-modo, .opciones-dificultad { flex-direction: column; }
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  /* Hacemos los marcadores un poco más grandes y pronunciados */
+  .marcador-lateral {
+    width: 200px;
+    height: 180px;
+  }
+  .puntaje-numero {
+    font-size: 4rem;
+  }
+  
+  /* Ocultamos el contenedor de marcadores que solo usábamos en móvil */
+  .marcador-contenedor {
+    display: none;
+  }
+   .layout-escritorio {
+        gap: 60px;
+    }
 }

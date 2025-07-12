@@ -6,21 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ta Te Ti</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
 </head>
 
 <body>
 
-    <!-- PANTALLA 1: CONFIGURACIÓN INICIAL -->
-    <div id="pantalla-setup">
+    <!-- PANTALLA 1: CONFIGURACIÓN (sin cambios estructurales) -->
+    <div id="pantalla-setup" class="activo">
         <div class="setup-contenedor">
             <h1>Ta-Te-Ti</h1>
             <h2>Elige tu modo de juego</h2>
-
             <div class="selector-modo">
                 <button id="btn-pvp" class="btn-modo">Jugador vs Jugador</button>
                 <button id="btn-pvc" class="btn-modo">Jugador vs Máquina</button>
             </div>
-
             <div id="selector-dificultad" class="oculto">
                 <h3>Selecciona la dificultad</h3>
                 <div class="opciones-dificultad">
@@ -42,17 +42,27 @@
         </div>
     </div>
 
-    <!-- PANTALLA 2: JUEGO PRINCIPAL (Oculta por defecto) -->
+    <!-- PANTALLA 2: JUEGO (reestructurada para responsividad) -->
     <div id="pantalla-juego" class="oculto">
-        <button id="btn-menu" class="btn-accion btn-menu">‹ Volver al Menú</button>
-        <div class="contenedor-principal">
+
+        <!-- Este es el nuevo contenedor para el layout de escritorio -->
+        <header class="header-juego">
+            <button id="btn-home" class="btn-header">‹ Menú</button>
+            <h1 class="titulo-juego">Ta-Te-Ti</h1>
+        </header>
+
+        <div class="layout-escritorio">
+
+            <!-- Marcador Izquierdo -->
             <div id="marcador-x" class="marcador-lateral">
                 <span id="etiqueta-jugador-x" class="etiqueta-jugador">Jugador X</span>
                 <span id="puntajeX" class="puntaje-numero">0</span>
             </div>
 
-            <div class="contenedor-juego">
-                <h1 class="titulo-juego">Ta-Te-Ti</h1>
+            <!-- Nueva Zona Central que agrupa el juego en sí -->
+            <div class="zona-central-juego">
+
+
                 <div id="tablero">
                     <div class="cuadro" id="1"></div>
                     <div class="cuadro" id="2"></div>
@@ -68,13 +78,16 @@
                 <div id="mensajes">
                     <p id="turno">Turno de X</p>
                 </div>
-                <button id="reiniciar">Reiniciar Ronda</button>
+
+                <button id="reiniciar" class="btn-accion">Siguiente Ronda</button>
             </div>
 
-            <div if="marcador-o" class="marcador-lateral">
+            <!-- Marcador Derecho -->
+            <div id="marcador-o" class="marcador-lateral">
                 <span id="etiqueta-jugador-o" class="etiqueta-jugador">Jugador O</span>
                 <span id="puntajeO" class="puntaje-numero">0</span>
             </div>
+
         </div>
     </div>
 
