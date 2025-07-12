@@ -1,9 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // =================================================================
-  // 1. CAPTURA DE ELEMENTOS Y ESTADO GLOBAL
-  // =================================================================
-
-  // --- Elementos de UI ---
   const pantallaSetup = document.getElementById("pantalla-setup");
   const pantallaJuego = document.getElementById("pantalla-juego");
   const btnPVP = document.getElementById("btn-pvp");
@@ -18,14 +13,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const reiniciarBtn = document.getElementById("reiniciar");
   const etiquetaJugadorX = document.getElementById("etiqueta-jugador-x");
   const etiquetaJugadorO = document.getElementById("etiqueta-jugador-o");
+  const btnMenu = document.getElementById("btn-menu");
+  const marcadorX = document.getElementById("marcador-x");
+  const marcadorO = document.getElementById("marcador-o");
 
-  // --- Estado del Juego ---
   let modoJuego;
   let dificultad;
   let turnoActual;
   let estadoTablero;
   let juegoTerminado;
-  let esperandoTurnoMaquina; // Bandera para bloquear clics (Etapa 2 y 6)
+  let esperandoTurnoMaquina;
   let puntajeX;
   let puntajeO;
 
@@ -40,16 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
     [2, 4, 6],
   ];
 
-  // =================================================================
-  // 2. LÓGICA DE CONFIGURACIÓN Y MENÚ PRINCIPAL
-  // =================================================================
-
   function configurarModoJuego(modo) {
     modoJuego = modo;
     if (modo === "pvp") {
       iniciarPartida();
     } else {
-      // modo 'pvc'
       selectorDificultad.classList.remove("oculto");
       btnPVC.classList.add("seleccionado");
       btnPVP.classList.remove("seleccionado");
@@ -57,8 +49,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function iniciarPartida() {
-    pantallaSetup.classList.add("oculto");
-    pantallaJuego.classList.remove("oculto");
+    pantallaSetup.classList.add("desvaneciendo");
+    pantallaSetup.addEventListener(
+      "animationend",
+      () => {
+        pantallaSetup.classList.remove("activo");
+        pantallaSetup.classList.add("oculto");
+        pantallaJuego.classList.remove("oculto");
+        pantallaJuego.classList.add("activo");
+      },
+      { once: true }
+    );
 
     etiquetaJugadorX.textContent = "Jugador X";
     etiquetaJugadorO.textContent =
@@ -70,11 +71,43 @@ document.addEventListener("DOMContentLoaded", () => {
     puntajeODisplay.textContent = puntajeO;
 
     reiniciarRonda();
+    actualizarMarcadorActivo();
   }
+  btnMenu.addEventListener("click", () => {
+    pantallaJuego.classList.remove("activo");
 
-  // =================================================================
-  // 3. LÓGICA DEL TABLERO Y JUEGO (Simula tablero.js)
-  // =================================================================
+    pantallaJuego.classList.add("desvaneciendo");
+
+    pantallaJuego.addEventListener(
+      "animationend",
+      () => {
+        pantallaJuego.classList.remove("desvaneciendo");
+        pantallaJuego.classList.add("oculto");
+
+        pantallaSetup.classList.remove("oculto", "desvaneciendo");
+        pantallaSetup.classList.add("activo");
+
+        btnPVC.classList.remove("seleccionado");
+        selectorDificultad.classList.add("oculto");
+      },
+      { once: true }
+    );
+  });
+
+  function actualizarMarcadorActivo() {
+    if (juegoTerminado) {
+      marcadorX.classList.remove("marcador-activo");
+      marcadorO.classList.remove("marcador-activo");
+      return;
+    }
+    if (turnoActual === "X") {
+      marcadorX.classList.add("marcador-activo");
+      marcadorO.classList.remove("marcador-activo");
+    } else {
+      marcadorO.classList.add("marcador-activo");
+      marcadorX.classList.remove("marcador-activo");
+    }
+  }
 
   function reiniciarRonda() {
     juegoTerminado = false;
@@ -91,9 +124,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     tablero.classList.remove("turno-o", "esperando-ia");
     tablero.classList.add("turno-x");
+    actualizarMarcadorActivo();
   }
 
-  // Función centralizada para actualizar la UI y el estado (Etapa 4)
   function actualizarCelda(indice, jugador) {
     estadoTablero[indice] = jugador;
     celdas[indice].textContent = jugador;
@@ -116,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!rondaGanada && !estadoTablero.includes("")) {
-      finalizarJuego(true); // Empate
+      finalizarJuego(true);
     }
   }
 
@@ -141,12 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // =================================================================
-  // 4. CONTROLADOR DE TURNOS (El "director de orquesta")
-  // =================================================================
-
   function procesarClickHumano(evento) {
-    // Bloquea clics si no es turno del humano o el juego terminó (Etapa 6)
     if (turnoActual !== "X" || juegoTerminado || esperandoTurnoMaquina) {
       return;
     }
@@ -158,35 +186,27 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // El humano (X) hace su jugada
     actualizarCelda(indice, "X");
     verificarGanador();
 
-    // Pasa al siguiente turno
     siguienteTurno();
   }
 
   function siguienteTurno() {
     if (juegoTerminado) return;
 
-    // Cambia el turno lógico
     turnoActual = "O";
     turnoDisplay.textContent = `Turno de ${etiquetaJugadorO.textContent}`;
     tablero.classList.replace("turno-x", "turno-o");
 
-    // Si estamos en modo PVC, es turno de la máquina (Etapa 2)
     if (modoJuego === "pvc") {
       esperandoTurnoMaquina = true;
       tablero.classList.add("esperando-ia");
 
-      // Llama a la IA con un retardo para realismo (Etapa 5)
       setTimeout(jugarMaquina, 500);
     }
+    actualizarMarcadorActivo();
   }
-
-  // =================================================================
-  // 5. LÓGICA DE INTELIGENCIA ARTIFICIAL (Simula ia.js)
-  // =================================================================
 
   function jugarMaquina() {
     if (juegoTerminado || turnoActual !== "O") return;
@@ -215,7 +235,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return movimientoAleatorio();
     }
     if (dificultad === "normal") {
-      // Prioridad 1: Intentar ganar
       const movimientoGanador = encontrarMovimientoGanador("O");
       if (movimientoGanador !== null) {
         console.log(
@@ -225,7 +244,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return movimientoGanador;
       }
 
-      // Prioridad 2: Bloquear al oponente
       const movimientoDeBloqueo = encontrarMovimientoGanador("X");
       if (movimientoDeBloqueo !== null) {
         console.log(
@@ -235,17 +253,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return movimientoDeBloqueo;
       }
 
-      // Prioridad 3: Movimiento estratégico
       console.log("IA (Normal): Decisión -> ESTRATÉGICO.");
       return movimientoEstrategico();
     }
     if (dificultad === "dificil") {
       console.log("IA (Difícil): Calculando el movimiento perfecto...");
-      // **AQUÍ CONECTAMOS MINIMAX**
+
       return obtenerMejorMovimiento();
     }
 
-    // Fallback para dificultad "fácil"
     return movimientoAleatorio();
   }
 
@@ -253,19 +269,14 @@ document.addEventListener("DOMContentLoaded", () => {
     let mejorScore = -Infinity;
     let mejorMovimiento = null;
 
-    // Itera solo sobre las celdas vacías del tablero REAL.
     estadoTablero.forEach((celda, indice) => {
       if (celda === "") {
-        // 1. Simula la jugada
         estadoTablero[indice] = "O";
 
-        // 2. Llama a minimax para obtener el score de esa jugada
         const score = minimax(estadoTablero, 0, false);
 
-        // 3. Deshaz la jugada
         estadoTablero[indice] = "";
 
-        // 4. Si el score actual es mejor que el mejor score guardado, actualízalo
         if (score > mejorScore) {
           mejorScore = score;
           mejorMovimiento = indice;
@@ -283,15 +294,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function minimax(tableroActual, profundidad, esMaximizador) {
     if (chequearGanador(tableroActual, "O")) {
-      // Gana la IA
       return 10 - profundidad;
     }
     if (chequearGanador(tableroActual, "X")) {
-      // Gana el Humano
       return profundidad - 10;
     }
     if (!tableroActual.includes("")) {
-      // Empate
       return 0;
     }
 
@@ -319,27 +327,25 @@ document.addEventListener("DOMContentLoaded", () => {
       return mejorScore;
     }
   }
-  // --- FUNCIONES DE AYUDA DE LA IA (HERMANAS, NO ANIDADAS) ---
 
-  // CORRECCIÓN 1: La función ahora acepta el parámetro "jugador"
   function encontrarMovimientoGanador(jugador) {
     for (const combinacion of combinacionesGanadoras) {
       const [a, b, c] = combinacion;
-      // Caso 1: Vacío en C
+
       if (
         estadoTablero[a] === jugador &&
         estadoTablero[b] === jugador &&
         estadoTablero[c] === ""
       )
         return c;
-      // Caso 2: Vacío en B
+
       if (
         estadoTablero[a] === jugador &&
         estadoTablero[c] === jugador &&
         estadoTablero[b] === ""
       )
         return b;
-      // Caso 3: Vacío en A
+
       if (
         estadoTablero[b] === jugador &&
         estadoTablero[c] === jugador &&
@@ -355,10 +361,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const esquinas = [0, 2, 6, 8];
     const lados = [1, 3, 5, 7];
 
-    // Jugar en el centro si está libre
     if (estadoTablero[centro] === "") return centro;
 
-    // Jugar en una esquina libre
     const esquinasLibres = esquinas.filter(
       (indice) => estadoTablero[indice] === ""
     );
@@ -367,14 +371,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return esquinasLibres[indiceAleatorio];
     }
 
-    // Jugar en un lado libre
     const ladosLibres = lados.filter((indice) => estadoTablero[indice] === "");
     if (ladosLibres.length > 0) {
       const indiceAleatorio = Math.floor(Math.random() * ladosLibres.length);
       return ladosLibres[indiceAleatorio];
     }
 
-    return null; // No debería ocurrir si el juego no ha terminado
+    return null;
   }
 
   function movimientoAleatorio() {
@@ -393,19 +396,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function chequearGanador(tablero, jugador) {
     for (const combinacion of combinacionesGanadoras) {
-      // 'every' comprueba si TODOS los elementos en la combinación cumplen la condición.
       if (combinacion.every((index) => tablero[index] === jugador)) {
-        return true; // Hay un ganador
+        return true;
       }
     }
-    return false; // No hay ganador
+    return false;
   }
 
-  // =================================================================
-  // 6. REGISTRO DE EVENT LISTENERS E INICIO
-  // =================================================================
-
-  // Menú
   btnPVP.addEventListener("click", () => configurarModoJuego("pvp"));
   btnPVC.addEventListener("click", () => configurarModoJuego("pvc"));
   document.querySelectorAll('input[name="dificultad"]').forEach((radio) => {
@@ -413,7 +410,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   btnIniciarJuego.addEventListener("click", iniciarPartida);
 
-  // Juego
   celdas.forEach((celda) =>
     celda.addEventListener("click", procesarClickHumano)
   );

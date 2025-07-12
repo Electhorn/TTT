@@ -44,16 +44,15 @@
 
     <!-- PANTALLA 2: JUEGO PRINCIPAL (Oculta por defecto) -->
     <div id="pantalla-juego" class="oculto">
+        <button id="btn-menu" class="btn-accion btn-menu">‹ Volver al Menú</button>
         <div class="contenedor-principal">
-            <div class="marcador-lateral">
+            <div id="marcador-x" class="marcador-lateral">
                 <span id="etiqueta-jugador-x" class="etiqueta-jugador">Jugador X</span>
                 <span id="puntajeX" class="puntaje-numero">0</span>
             </div>
 
             <div class="contenedor-juego">
                 <h1 class="titulo-juego">Ta-Te-Ti</h1>
-
-                <!-- *** CELDAS RESTAURADAS AQUÍ *** -->
                 <div id="tablero">
                     <div class="cuadro" id="1"></div>
                     <div class="cuadro" id="2"></div>
@@ -72,7 +71,7 @@
                 <button id="reiniciar">Reiniciar Ronda</button>
             </div>
 
-            <div class="marcador-lateral">
+            <div if="marcador-o" class="marcador-lateral">
                 <span id="etiqueta-jugador-o" class="etiqueta-jugador">Jugador O</span>
                 <span id="puntajeO" class="puntaje-numero">0</span>
             </div>
